@@ -5,8 +5,32 @@
 </head>
 <body>
     <h1>Latest News Summaries</h1>
+    
+    <!-- Search Bar -->
+    <input type="text" id="searchBox" placeholder="Search news..." onkeyup="searchArticles()">
+    <ul id="results"></ul>
+
+    <!-- Static List (if needed) -->
     <ul>
         <li><a href="news/sample.html">Sample News Article</a></li>
     </ul>
+
+    <script>
+    async function searchArticles() {
+        let query = document.getElementById("searchBox").value.toLowerCase();
+        let response = await fetch("news/search.json");
+        let articles = await response.json();
+        
+        let results = articles.filter(article => 
+            article.title.toLowerCase().includes(query) || 
+            article.summary.toLowerCase().includes(query)
+        );
+
+        let resultsList = document.getElementById("results");
+        resultsList.innerHTML = results.map(article => 
+            `<li><a href="${article.url}">${article.title}</a></li>`
+        ).join("");
+    }
+    </script>
 </body>
 </html>
